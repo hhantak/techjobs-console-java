@@ -1,8 +1,9 @@
 package org.launchcode.techjobs.console;
 
-import java.util.ArrayList;
+
+import java.util.*;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 /**
  * Created by LaunchCode
@@ -11,7 +12,7 @@ public class TechJobs {
 
     private static Scanner in = new Scanner(System.in);
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
         // Initialize our field map with key/name pairs
         HashMap<String, String> columnChoices = new HashMap<>();
@@ -58,10 +59,10 @@ public class TechJobs {
 
                 // What is their search term?
                 System.out.println("\nSearch term: ");
-                String searchTerm = in.nextLine();
+                String searchTerm = in.nextLine().toLowerCase(Locale.ROOT);
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -103,14 +104,37 @@ public class TechJobs {
                 validChoice = true;
             }
 
-        } while(!validChoice);
+        } while (!validChoice);
 
         return choiceKeys[choiceIdx];
     }
 
     // Print a list of jobs
-    private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
 
-        System.out.println("printJobs is not implemented yet");
+
+    private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        for (HashMap<String, String> map : someJobs) {
+            for (Map.Entry<String, String> mapEntry : map.entrySet()) {
+                String key = mapEntry.getKey();
+                String value = mapEntry.getValue();
+
+                if (key.equals("name")) {
+                    System.out.println("*****\n" + key + ": " + value);
+                } else {
+                    System.out.println(key + ": " + value);
+                }
+
+            }
+        }
+        if (someJobs.isEmpty()) {
+            System.out.println("sorry no results found");
+        }
     }
 }
+// There is no searchTerm in this method. I have 90+ key/value pairs to be referenced and printed.
+// if searchTerm != value {
+// sout("sorry no results found");
+//}
+// book says no results should be coded in printJobs; however, there is no searchterm being taken into consideration in this method.
+// I would argue no results would come from findByValue, since someJobs is just a list of every possible listing.
+

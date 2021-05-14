@@ -1,5 +1,6 @@
 package org.launchcode.techjobs.console;
 
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -7,9 +8,8 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -57,12 +57,12 @@ public class JobData {
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
+     * <p>
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
-     * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param column Column that should be searched.
+     * @param value  Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -74,9 +74,9 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+            String aValue = row.get(column).toLowerCase(Locale.ROOT);
+            String caseSensitiveValue = value.toLowerCase(Locale.ROOT);
+            if (aValue.contains(caseSensitiveValue)) {
                 jobs.add(row);
             }
         }
@@ -125,4 +125,36 @@ public class JobData {
         }
     }
 
+    public static ArrayList<HashMap<String, String>> findByValue(String searchTerm) {
+        loadData();
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> job : allJobs) {
+
+            for (String value : job.values()) {
+                String caseSensitiveValue = value.toLowerCase(Locale.ROOT);
+                if (caseSensitiveValue.contains(searchTerm)) {
+                    if (!jobs.contains(job)) {
+                        jobs.add(job);
+                    }
+                }
+
+            }
+
+        }
+        return jobs;
+    }
 }
+
+
+//
+//            /* nested loop through the columns to check the key/value pairs. case insensitivity goes here
+//            * for (loops through keys) {
+//            *   for (loops through values) {
+//            *       contains(searchTerm)
+//
+//
+
+
+
+
